@@ -1,0 +1,1970 @@
+Index: src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java b/src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java
+new file mode 100644
+--- /dev/null	(date 1751626841483)
++++ b/src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java	(date 1751626841483)
+@@ -0,0 +1,58 @@
++package com.dslengine.commandprocessor;
++
++import javafx.scene.Node;
++import javafx.scene.control.Label;
++import javafx.scene.layout.Background;
++import javafx.scene.layout.BackgroundFill;
++import javafx.scene.layout.Pane;
++import javafx.scene.paint.Color;
++
++import java.util.Map;
++import java.util.Stack;
++
++public abstract class AbstractContainerStartProcessor<T extends Pane> implements CommandProcessor{
++    /**
++     * Procesa una līnea de comandos y aplica las propiedades al Stage o al contenedor actual.
++     *
++     * @param line             La linea de comando completa.
++     * @param currentContainer El contenedor de JavaFX actual donde se deben añadir los elementos.
++     * @param properties       Un mapa mutable donde se pueden almacenar propiedades globales (ejemplo: ancho/alto de ventana).
++     * @param statusLabel      La etiqueta para mostrar mensajes de estado de error.
++     * @return El nodo UI creado o modificado, o null si el commando no crea un nuevo nodo.
++     * @throws IllegalArgumentException Si el formato del documento es incorrecto o hay un error de lógica.
++     */
++    @Override
++    public Node process(String line, Pane currentContainer, Map<String, Object> properties, Label statusLabel) throws IllegalArgumentException {
++        // ↪ 📌Agregarlo al contenedor actual (tope de la pila)
++        @SuppressWarnings("unchecked")
++        Stack<Pane> containerStack = (Stack<Pane>) properties.get("containerStack");
++        // 1. Crear el nuevo layout específico (VBox, HBox, etc).
++        T newContainer = createContainer();
++        // 2. Aplicar configuración opcional como espaciado si corresponde.
++        applyCustomAttributes(line, newContainer);
++        // 3. Agregar al contenedor activo y empujar a la pila.
++        Pane parent = containerStack.peek();
++        parent.getChildren().add(newContainer);
++        // ↪ 🚀 Empujar el nuevo VBox a la pila: ahora será el contenedor activo.
++        containerStack.push(newContainer);
++        // 4. Asignar color local si fue definido anteriormente.
++        if (properties.containsKey("localColor")) {
++            Color color = (Color) properties.remove("localColor");
++            newContainer.setBackground(new Background(new BackgroundFill(color, null, null)));
++        }
++        // ↪ 🔔Feedback visual
++        if (statusLabel == null) {
++            statusLabel.setText("[↪] " + newContainer.getClass().getSimpleName() + " creado.");
++        }
++        return newContainer;
++    }
++
++    /**
++     * Métodos que debe implementar cada subclase para crear su layout específico.
++     * */
++    protected abstract T createContainer();
++
++    protected void applyCustomAttributes(String line, T newContainer) {
++
++    }
++}
+Index: src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java b/src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java
+new file mode 100644
+--- /dev/null	(date 1750936215269)
++++ b/src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java	(date 1750936215269)
+@@ -0,0 +1,35 @@
++package com.dslengine.commandprocessor;
++
++import javafx.scene.Node;
++import javafx.scene.control.Label;
++import javafx.scene.layout.Pane;
++
++import java.util.Map;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++public class DimensionsCommandProcessor implements CommandProcessor{
++    /**
++     * Procesa una līnea de comandos y aplica las propiedades al Stage o al contenedor actual.
++     *
++     * @param line             La linea de comando completa.
++     * @param currentContainer El contenedor de JavaFX actual donde se deben añadir los elementos.
++     * @param properties       Un mapa mutable donde se pueden almacenar propiedades globales (ejemplo: ancho/alto de ventana).
++     * @param statusLabel      La etiqueta para mostrar mensajes de estado de error.
++     * @return El nodo UI creado o modificado, o null si el commando no crea un nuevo nodo.
++     * @throws IllegalArgumentException Si el formato del documento es incorrecto o hay un error de lógica.
++     */
++    @Override
++    public Node process(String line, Pane currentContainer, Map<String, Object> properties, Label statusLabel) throws IllegalArgumentException {
++        // Ejemplo: "dimensiones: 800x600"
++        Pattern pattern = Pattern.compile("(\\d+)x(\\d+)");
++        Matcher matcher = pattern.matcher(line);
++        if (matcher.find()) {
++            properties.put("windowWidth", Double.parseDouble(matcher.group(1)));
++            properties.put("windowHeight", Double.parseDouble(matcher.group(2)));
++        } else {
++            throw new IllegalArgumentException("Formato de dimensiones incorrecto en '" + line + "' Use WxH.");
++        }
++        return null;
++    }
++}
+Index: src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java b/src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java
+new file mode 100644
+--- /dev/null	(date 1750839408386)
++++ b/src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java	(date 1750839408386)
+@@ -0,0 +1,59 @@
++package com.dslengine.commandprocessor;
++
++import javafx.scene.Node;
++import javafx.scene.control.Label;
++import javafx.scene.layout.Pane;
++import javafx.scene.paint.Color;
++
++import java.util.Map;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++public class ColorCommandProcessor implements CommandProcessor {
++
++    /**
++     * Procesa una līnea de comandos y aplica las propiedades al Stage o al contenedor actual.
++     *
++     * @param line             La linea de comando completa.
++     * @param currentContainer El contenedor de JavaFX actual donde se deben añadir los elementos.
++     * @param properties       Un mapa mutable donde se pueden almacenar propiedades globales (ejemplo: ancho/alto de ventana).
++     * @param statusLabel      La etiqueta para mostrar mensajes de estado de error.
++     * @return El nodo UI creado o modificado, o null si el commando no crea un nuevo nodo.
++     * @throws IllegalArgumentException Si el formato del documento es incorrecto o hay un error de lógica.
++     */
++    @Override
++    public Node process(String line, Pane currentContainer, Map<String, Object> properties, Label statusLabel) throws IllegalArgumentException {
++        // Ejemplo 1: "color RGB:255,255,0"
++        // Ejemplo 2: "color RGB: 255,255,0"
++        // Ejemplo 3: "color RGB:255,255, 0"
++        // Ejemplo 4: "color RGB:255, 255, 0"
++        // Ejemplo 5: "color RGB: 255, 255, 0"
++
++        // Nuevo código.
++        // Elimina el prefijo y extrae solo la parte RGB.
++        String rgbPart = line.replaceFirst("(?i)^color RGB:\\s*", "").trim();
++
++        // Permite espacios opcionales entre los componentes RGB.
++        Pattern pattern = Pattern.compile("\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)\\s*");
++        Matcher matcher = pattern.matcher(rgbPart);
++
++        // En el if cambiamos matcher.find() por matcher.matches().
++        if (matcher.matches()) {
++            int r = Integer.parseInt(matcher.group(1));
++            int g = Integer.parseInt(matcher.group(2));
++            int b = Integer.parseInt(matcher.group(3));
++
++            if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
++                throw new IllegalArgumentException("Valores RGB fuera de rangos. Deben estar entre 0 y 255");
++            }
++            properties.put("panelColor", Color.rgb(r, g, b));
++
++            if (statusLabel != null) {
++                statusLabel.setText("[@] Color asignado: RGB("+ r + ", " + g + ", " + b + ")");
++            }
++        } else {
++            throw new IllegalArgumentException("Formato de color RGB incorrecto '" + line + "'. Use R, G, B");
++        }
++        return null;
++    }
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+new file mode 100644
+--- /dev/null	(date 1753652057462)
++++ b/.idea/workspace.xml	(date 1753652057462)
+@@ -0,0 +1,264 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
++  <component name="ChangeListManager">
++    <list default="true" id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="DSL - controlador dsl sin uso">
++      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/Config a Workbench.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/ColoCommandProcessor.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/CommandProcessor.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/DslApp.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/UiBuilderController.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/UiiBuilderController2.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/WindowCommandProcessor.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/cambios/CHANGELOG.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/cambios/Plantilla-changelog.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/cambios/WindowCommandProcessor.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/document/nesting.md" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/pendientes" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/scripts" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/ButtonCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/CommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/GenericEndProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxEndProcessorOld.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxStartProcessorOld.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/LabelCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuBarEndProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuBarStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuEndProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuItemStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/PaneStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/PromTextCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/StackPaneStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/TextFieldCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/UnitParser.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxEndProcessorOld.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxStartProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxStartProcessorOld.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/WindowCommandProcessor.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/dslui/UIBuilderController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/dslui/UIBuilderControllerOriginal.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/java/test/UIBuilderController.java" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/main/resources/com/dslengine/dslui/UIBuilder.fxml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/url" afterDir="false" />
++    </list>
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="ChangesViewManager">
++    <option name="groupingKeys">
++      <option value="module" />
++    </option>
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Class" />
++      </list>
++    </option>
++  </component>
++  <component name="Git.Settings">
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++  </component>
++  <component name="MavenImportPreferences">
++    <option name="generalSettings">
++      <MavenGeneralSettings>
++        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
++      </MavenGeneralSettings>
++    </option>
++  </component>
++  <component name="ProblemsViewState">
++    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
++  </component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 8
++}</component>
++  <component name="ProjectId" id="2yv1IKNCRGVIZ0CQQNpmTv61F6H" />
++  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.DslApp.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle./Users/julietacristaldo/IdeaProjects/dsl [build].executor&quot;: &quot;Debug&quot;,
++    &quot;OverrideImplement.generate.javadoc&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;/Users/julietacristaldo/IdeaProjects/dsl&quot;,
++    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;
++  },
++  &quot;keyToStringList&quot;: {
++    &quot;ChangesTree.GroupingKeys&quot;: [
++      &quot;directory&quot;
++    ]
++  }
++}</component>
++  <component name="RecentsManager">
++    <key name="CopyFile.RECENT_KEYS">
++      <recent name="$PROJECT_DIR$" />
++    </key>
++    <key name="CopyClassDialog.RECENTS_KEY">
++      <recent name="com.dslengine.commandprocessor" />
++      <recent name="com.dslengine.dslui" />
++    </key>
++  </component>
++  <component name="RunManager" selected="Application.DslApp">
++    <configuration name="DslApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="com.dslengine.dslui.DslApp" />
++      <module name="dsl" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="com.dslengine.dslui.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
++    <configuration name="/Users/julietacristaldo/IdeaProjects/dsl [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
++      <ExternalSystemSettings>
++        <option name="executionName" />
++        <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="externalSystemIdString" value="GRADLE" />
++        <option name="scriptParameters" value="--info" />
++        <option name="taskDescriptions">
++          <list />
++        </option>
++        <option name="taskNames">
++          <list>
++            <option value="build" />
++          </list>
++        </option>
++        <option name="vmOptions" />
++      </ExternalSystemSettings>
++      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
++      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
++      <DebugAllEnabled>false</DebugAllEnabled>
++      <RunAsTest>false</RunAsTest>
++      <method v="2" />
++    </configuration>
++    <recent_temporary>
++      <list>
++        <item itemvalue="Application.DslApp" />
++        <item itemvalue="Gradle./Users/julietacristaldo/IdeaProjects/dsl [build]" />
++      </list>
++    </recent_temporary>
++  </component>
++  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="" />
++      <created>1750700151904</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1750700151904</updated>
++    </task>
++    <task id="LOCAL-00001" summary="DSL - concept">
++      <option name="closed" value="true" />
++      <created>1752705682042</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1752705682042</updated>
++    </task>
++    <task id="LOCAL-00002" summary="DSL DOCUMENT ERROR FORMATO INCORRECTO X,Y">
++      <option name="closed" value="true" />
++      <created>1752920168852</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1752920168852</updated>
++    </task>
++    <task id="LOCAL-00003" summary="DSL - MAIN APP">
++      <option name="closed" value="true" />
++      <created>1753650478947</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1753650478948</updated>
++    </task>
++    <task id="LOCAL-00004" summary="DSL - Domains-Specific Languaje concept">
++      <option name="closed" value="true" />
++      <created>1753651986727</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1753651986727</updated>
++    </task>
++    <task id="LOCAL-00005" summary="DSL - controlador dsl sin uso">
++      <option name="closed" value="true" />
++      <created>1753652036289</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1753652036289</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
++    <servers />
++  </component>
++  <component name="UpdateCopyrightCheckinHandler">
++    <option name="UPDATE_COPYRIGHT" value="true" />
++  </component>
++  <component name="Vcs.Log.History.Properties">
++    <option name="COLUMN_ID_ORDER">
++      <list>
++        <option value="Default.Root" />
++        <option value="Default.Author" />
++        <option value="Default.Date" />
++        <option value="Default.Subject" />
++      </list>
++    </option>
++  </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State>
++              <option name="CUSTOM_BOOLEAN_PROPERTIES">
++                <map>
++                  <entry key="Show.Git.Branches" value="true" />
++                </map>
++              </option>
++            </State>
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="DSL - concept" />
++    <MESSAGE value="DSL DOCUMENT ERROR FORMATO INCORRECTO X,Y" />
++    <MESSAGE value="DSL - MAIN APP" />
++    <MESSAGE value="DSL - Domains-Specific Languaje concept" />
++    <MESSAGE value="DSL - controlador dsl sin uso" />
++    <option name="LAST_COMMIT_MESSAGE" value="DSL - controlador dsl sin uso" />
++  </component>
++</project>
+\ No newline at end of file
+Index: src/main/resources/com/dslengine/dslui/UIBuilder.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/com/dslengine/dslui/UIBuilder.fxml b/src/main/resources/com/dslengine/dslui/UIBuilder.fxml
+new file mode 100644
+--- /dev/null	(date 1750766472410)
++++ b/src/main/resources/com/dslengine/dslui/UIBuilder.fxml	(date 1750766472410)
+@@ -0,0 +1,31 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<?import javafx.scene.control.Button?>
++<?import javafx.scene.control.Label?>
++<?import javafx.scene.control.TextArea?>
++<?import javafx.scene.layout.BorderPane?>
++<?import javafx.scene.layout.VBox?>
++<?import javafx.geometry.Insets?>
++<?import javafx.scene.layout.HBox?>
++
++<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dslengine.dslui.UIBuilderController">
++    <top>
++        <VBox spacing="10" alignment="CENTER" BorderPane.alignment="CENTER">
++            <padding>
++                <Insets top="20" right="20" bottom="20" left="20"/>
++            </padding>
++            <Label text="Escribe tus comandos de UI aquí:" />
++            <TextArea fx:id="commandTextArea" prefHeight="200" promptText="Ej:&#10;ventana: Mi App&#10;dimensiones: 600x400&#10;panel: principal&#10;color RGB: 255-0-0&#10;boton: ClickMe&#10;posicion: 50,50"/>
++            <HBox spacing="10" alignment="CENTER">
++                <Button text="Generar Ventana" onAction="#generateWindow" />
++                <Button text="Limpiar Terminal" onAction="#clearTerminal" />
++            </HBox>
++        </VBox>
++    </top>
++    <center>
++        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
++            <Label text="La ventana generada aparecerá aquí." />
++            <Label fx:id="statusLabel" textFill="RED"/>
++        </VBox>
++    </center>
++</BorderPane>
+\ No newline at end of file
+Index: document/UiiBuilderController2.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/document/UiiBuilderController2.md b/document/UiiBuilderController2.md
+new file mode 100644
+--- /dev/null	(date 1752924037977)
++++ b/document/UiiBuilderController2.md	(date 1752924037977)
+@@ -0,0 +1,190 @@
++# Clase UIBuilderController
++```java
++package com.dslengine.dslui;
++
++import javafx.fxml.FXML;
++import javafx.scene.Scene;
++import javafx.scene.control.Button;
++import javafx.scene.control.Label;
++import javafx.scene.control.TextArea;
++import javafx.scene.layout.Background;
++import javafx.scene.layout.BackgroundFill;
++import javafx.scene.layout.Pane;
++import javafx.scene.paint.Color;
++import javafx.stage.Stage;
++
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++public class UIBuilderController {
++    @FXML
++    private TextArea commandTextArea;
++    @FXML
++    private Label statusLabel;
++    private Stage generatedStage;
++    @FXML
++    private void generateWindow() { 
++        // Limpiar el estado anterior. 
++        statusLabel.setText("");
++        if (generatedStage != null) {
++            // Cerrar la ventana anterior si existe. 
++            generatedStage.close();
++        }
++        
++        String commands = commandTextArea.getText();
++        // Divide el texto en líneas. 
++        String[] lines = commands.split("\\r?\\n");
++        // Propiedades por defecto. 
++        String windowTitle = "Ventana Generada";
++        double windowWidth = 400;
++        double windowsHeight = 300;
++        // Color gris claro por defecto. 
++        Color panelColor = Color.web("#f0f0f0");
++        String buttonText = "Botón Generado";
++        double buttonX = 10;
++        double buttonY = 10;
++        // Un pane flexible para colocar elementos. 
++        Pane rootPane = new Pane();
++        try {
++            for (String line : lines) {
++                // Elimina espacios en blancos al inicio y al final. 
++                line = line.trim();
++                if (line.isEmpty()) continue;
++                if (line.startsWith("ventana:")) {
++                    windowTitle = line.substring("ventana:".length()).trim();
++                } else if (line.startsWith("dimensiones:")) {
++                    Pattern pattern = Pattern.compile("(\\d*)x(\\d*)");
++                    Matcher matcher = pattern.matcher(line);
++                    if (matcher.find()) {
++                        windowWidth = Double.parseDouble(matcher.group(1));
++                        windowsHeight = Double.parseDouble(matcher.group(2));
++                    } else {
++                        throw new IllegalArgumentException("Formato de dimensiones incorrecto. Use WxH");
++                    }
++                } else if (line.startsWith("color RGB:")) {
++                    Pattern pattern = Pattern.compile("(\\d+)-(\\d+)-(\\d+)");
++                    Matcher matcher = pattern.matcher(line);
++                    if (matcher.find()) {
++                    int r = Integer.parseInt(matcher.group(1));
++                    int g = Integer.parseInt(matcher.group(2));
++                    int b = Integer.parseInt(matcher.group(3));
++                    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
++                        throw new IllegalArgumentException("Valores RGB deben estar entre 0 y 255");
++                    }
++                    panelColor = Color.rgb(r, g, b);
++                    } else {
++                        throw new IllegalArgumentException("Formato de color RGB incorrecto. Use R-G-B");
++                    }
++                } else if(line.startsWith("boton:")) {
++                    buttonText = line.substring("boton:".length()).trim();
++                    Button newButton = new Button(buttonText);
++                    // Añadir el nuevo botón 
++                    newButton.setOnAction(e ->System.out.println("Clic en: "+newButton.getText()));
++                    // Añade el botón al panel. 
++                    rootPane.getChildren().add(newButton);
++                } else if(line.startsWith("posicion:") && rootPane.getChildren().size() >0){
++                    // Aplicar la posición al último elemento añadido (asumimos que es el botón). 
++                    Pattern pattern = Pattern.compile("(\\d+),(\\d+)");
++                    Matcher matcher = pattern.matcher(line); 
++                    if(matcher.find()){
++                        double x = Double.parseDouble(matcher.group(1));
++                        double y = Double.parseDouble(matcher.group(2));
++                        // Aplicar la posición al último nodo añadido (ejemplo: botón). 
++                        rootPane.getChildren().get(rootPane.getChildren().size() -1).setLayoutX(x); 
++                        rootPane.getChildren().get(rootPane.getChildren().size() -1).setLayoutY(y); 
++                    } else {
++                        throw new IllegalArgumentException("Formato de posición incorrecto. Use X,Y.");
++                    }
++                } 
++                // Aquí podrías añadir más comandos como 'label:', 'texto:', etc. 
++                // y si tuvieras diferentes tipos de paneles, tendrías que gestionar 
++                // cuál es panel actual al que se le añaden los elementos. 
++                }
++                rootPane.setBackground(new Background(new BackgroundFill(panelColor, null,null)));
++                generatedStage =new Stage();
++                generatedStage.setTitle(windowTitle);
++                generatedStage.setScene(new Scene(rootPane, windowWidth, windowsHeight));
++                generatedStage.show();
++        } catch(IllegalArgumentException e) {
++            statusLabel.setText("Error en el commando: "+e.getMessage());
++            e.printStackTrace(); 
++        } catch(Exception e){
++            statusLabel.setText("Error desconocido al generar la ventana: "+e.getMessage());
++            e.printStackTrace();
++        }
++    }
++
++    @FXML
++    private void clearTerminal() {
++        commandTextArea.clear();
++        statusLabel.setText("");
++        if (generatedStage != null) {
++            generatedStage.close();
++            generatedStage = null;
++        }
++    }
++}
++```
++este controlador está altamente funcional y refleja muy bien tu estilo meticuloso y orientado a la expresión clara 
++mediante ```DSLs```. La estructura está limpia, intuitiva y extensible. Aquí algunas observaciones y sugerencias para 
++enriquecerlo aún más:
++___
++## ✅ Fortalezas técnicas:
++* **Parsers robustos con validación regex**: Muy buen manejo de expresiones regulares para asegurar formatos correctos.
++* **Acoplamiento bajo**: Cada comando afecta solo lo que necesita. Muy en línea con el principio de responsabilidad única.
++* **Feedback inmediato al usuario**: mediante ```statusLabel``` y excepciones bien diferenciadas.
++___
++## 💡 Sugerencias para refinar el motor DSL:
++### 1. Separación de responsabilidades (SRP-friendly):
++Podrías extraer el análisis y aplicación de comandos en una clase tipo ```DslCommandProcessor```. Por ejemplo:
++```java
++new DslCommandProcessor().apply(commands, rootPane);
++```
++Esto permitiría:
++* Testear el parser sin lanzar una ```UI```.
++* Reutilizar en otros contextos o UIs.
++### 2. Soporte para múltiples botones o componentes:
++Actualmente se asume que todo es un botón y solo uno por ventana. Podría enriquecerlo con lógica como:
++```text
++boton: Aceptar
++posicion: 50,50
++boton: Cancelar
++posicion: 150,50
++```
++y que cada línea de ```boton:``` cree un nuevo botón en secuencia, como ya se está haciendo.
++### 3. Expansión futura con más elementos: Estás a un paso de admitir:
++* ```label: Bienvenido```
++* ```textfield: Nombre```
++* ```evento: boton Cancelar => cerrar```
++### 4. Mensajes de error más expresivos: 
++Podrías resaltar en el ```statusLabel``` qué línea exacta falló. Algo como:
++```java
++throw new IllegalArgumentException("Línea inválida [" + line + "]: " + e.getMessage());
++```
++> ### Nota
++> diseñar en el futuro una arquitectura extensible tipo ```Command -> Action``` usando un ```Map<String, Consumer<String>>```
++> para darle modularidad al parser. Sería una evolución elegante y le daría un nivel de control fascinante para un
++> ```DSL``` visual.
++___
++AQUI VA EL LINK DEL FORMATO INCORRECTO USE X,Y.
++___
++## 🔍 Recomendaciones para mejorar la tolerancia del parser:
++### 1. Permitir espacios opcionales:
++
++```java
++import java.util.regex.Pattern;
++
++Pattern pattern = Pattern.compile("(\\d+)\\s*,\\s*(\\d+)");
++```
++### Eso soporta:
++```text
++posicion: 100 , 200
++```
++o...
++```text
++posicion: 100,200
++```
++### 2. Agregar validación más precisa con contexto:
++```java
++throw new IllegalArgumentException("Formato de posición incorrecto en: '" + line + "'. Use X,Y");
++```
+\ No newline at end of file
+Index: document/nesting.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/document/nesting.md b/document/nesting.md
+new file mode 100644
+--- /dev/null	(date 1752786369275)
++++ b/document/nesting.md	(date 1752786369275)
+@@ -0,0 +1,35 @@
++Sábado, Jun 28
++
++---
++¿Qué tendrías que hacer para mantener el contexto de ```nesting```?
++En el ```UIBuilderController```, cada vez que se procesa una línea, podés hacer:
++```java
++Pane container = (Pane) globalProperties.getOrDefault("currentContainer", currentRootPane); 
++Node createdNode = processor.process(line, container, globalProperties, statusLabel);
++```
++Y si el ```VBoxStartProcessor``` actualiza currentContainer, lo heredan los comandos que vienen después (hasta que hagas
++un ```end``` o lo resetees manualmente).<p>
++🧩Esta técnica es una forma muy elegante y extensible de manejar estructuras anidadas (```nesting```) en un flujo 
++declarativo como el de ```DSL```. y aquí vamos a desglosarlo paso a paso:
++___
++
++### 🧠 ¿Qué significa mantener el contexto de ```nesting```?
++En interfaces jerárquicas (como las creadas con ```VBox```, ```HBox```, etc.), se necesita saber “dónde” agregar cada 
++nuevo nodo.<p>
++Esa ubicación —**el contenedor actual**— puede cambiar dinámicamente a medida que va interpretando el ```DSL```.
++___
++
++### 🧱 Bloque del código
++```java
++Pane container = (Pane) globalProperties.getOrDefault("currentContainer", currentRootPane);
++Node createdNode = processor.process(line, container, globalProperties, statusLabel);
++```
++1. ```currentContainer```: es una propiedad global que guarda en qué contenedor estamos trabajando actualmente. 
++Por ejemplo, si abrimos un VBox, esa referencia se guarda ahí.
++2. ```getOrDefault(...)```: si no se ha establecido aún un ```currentContainer```, usamos ```currentRootPane``` como 
++fallback. Ideal para comenzar en la ```raíz```.
++3. ```processor.process(...)```: cada línea del ```DSL``` se procesa con el contenedor actual, y se le pasa el contexto 
++completo (```globalProperties```) para que pueda modificarlo si es necesario (como al abrir un nuevo ```VBox```).
++___
++
++
+Index: .mvn/wrapper/maven-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/.mvn/wrapper/maven-wrapper.properties b/.mvn/wrapper/maven-wrapper.properties
+new file mode 100644
+--- /dev/null	(date 1750700151582)
++++ b/.mvn/wrapper/maven-wrapper.properties	(date 1750700151582)
+@@ -0,0 +1,2 @@
++distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/3.8.5/apache-maven-3.8.5-bin.zip
++wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar
+\ No newline at end of file
+Index: pendientes
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pendientes b/pendientes
+new file mode 100644
+--- /dev/null	(date 1753175156939)
++++ b/pendientes	(date 1753175156939)
+@@ -0,0 +1,7 @@
++lista de pendientes.
++- Tokens -> Tokenisar
++- Props -> promtText para TexField y TextArea.
++- armemos un sistema de CommandDispatcher para interpretar los comandos del TextArea con patrones o
++gramática más expresiva
++- clase CommandFeedBack para errores y confirmaciones de la terminal DSl.
++
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1750700157132)
++++ b/.idea/vcs.xml	(date 1750700157132)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1750700157108)
++++ b/.idea/misc.xml	(date 1750700157108)
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ExternalStorageConfigurationManager" enabled="true" />
++  <component name="MavenProjectsManager">
++    <option name="originalFiles">
++      <list>
++        <option value="$PROJECT_DIR$/pom.xml" />
++      </list>
++    </option>
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
++    <output url="file://$PROJECT_DIR$/out" />
++  </component>
++</project>
+\ No newline at end of file
+Index: scripts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/scripts b/scripts
+new file mode 100644
+--- /dev/null	(date 1751713794960)
++++ b/scripts	(date 1751713794960)
+@@ -0,0 +1,204 @@
++ventana: Mi Súper App Dinámica
++dimensiones: 700x500
++color RGB: 100, 149, 237
++label: ¡Bienvenido a mi App!
++posicion: 50x20
++boton: Haz Clic Aquí
++posicion: 50x50
++textfield: Escribe algo...
++posicion: 50x100
++
++
++Lenguajes Declarativos para el Anidamiento
++Para permitir el anidamiento, tu "lenguaje" de comandos necesitará estructuras para iniciar y finalizar bloques de contenedores. Podríamos usar algo similar a cómo funcionan las etiquetas en HTML o los bloques en otros lenguajes:
++
++Comandos de Inicio de Contenedor: Indican el tipo de panel y sus propiedades.
++Comandos de Fin de Contenedor: Indican el cierre del panel actual.
++Aquí hay algunas opciones para el lenguaje declarativo, eligiendo la más sencilla y clara:
++
++Opción Preferida: Comandos Explícitos de Inicio/Fin
++Es el más claro y fácil de parsear.
++
++iniciar [tipo_panel]: [propiedades_opcionales]
++finalizar [tipo_panel] (el tipo_panel opcional para verificación de coherencia)
++
++--------------------------------------
++Ejemplo de cómo se vería tu entrada:
++--------------------------------------
++ventana: Mi App con Anidamiento
++dimensiones: 800x600
++color RGB: 200, 200, 255
++
++vbox: espaciado 10
++    color RGB: 255, 255, 200
++    label: Panel Superior
++    boton: Boton 1
++end vbox
++
++iniciar hbox: espaciado 5
++    color RGB: 200-255-200
++    label: Panel Inferior
++    textfield: Mi Texto
++finalizar hbox
++---------------------------------------
++propiedades del VBOX
++---------------------------------------
++vbox: [prefWidth 80%] [maxHeight infinito] [padding 16px]
++
++✍️ Ejemplo DSL que esto soporta:
++
++vbox: espaciado 12 prefWidth 300 prefHeight 200 maxHeight 400 maxWidth 600
++---------------------------------------
++
++-------- script generado por geminis --------------
++ventana: Mi Diseño Anidado
++dimensiones: 800x600 ; Esto podría ser para la ventana principal Stage
++
++# Contenedor HBox principal
++iniciar hbox:
++    # Contenedor VBox anidado dentro del HBox
++    iniciar vbox: hgrow ALWAYS, max-alto INFINITO, max-ancho INFINITO, pref-alto 800, pref-ancho 200, alineacion CENTRO, estilo bg-1
++        # Botón dentro del VBox
++        boton: texto "VBox Button", id leftBtnV
++
++        # Segundo HBox anidado dentro del VBox
++        iniciar hbox: vgrow ALWAYS
++            # Botón dentro del segundo HBox
++            boton: texto "HBox Button", id leftBtnH
++        finalizar hbox
++
++    finalizar vbox
++
++finalizar hbox
++------------------------------------------------------
++
++------------------------------------------------------
++vbox: espaciado 15 padding 20 alignment center
++  label: ¡Bienvenido!
++  label: Disfrutá el arte de crear interfaces.
++  boton: Crear
++end
++------------------------------------------------------
++ventana: Menus App
++  dimensiones: 800x400
++  controlador: dustin.examples.MenuController # Opcional, si tu app soporta inyectar controladores externos
++
++iniciar vbox: id vbox, pref-alto 400, pref-ancho 800
++  iniciar menubar: id menuBar
++    al presionar tecla: handleKeyInput # onKeyPressed
++
++    iniciar menu: texto "File"
++      menuitem: texto "New"
++      menuitem: texto "Open"
++      menuitem: texto "Save"
++      separador menuitem:
++      menuitem: texto "Save As"
++      menuitem: texto "Exit"
++    finalizar menu
++
++    iniciar menu: texto "JavaFX 2.0 Examples"
++      menuitem: texto "Text Example"
++      menuitem: texto "Objects Example"
++      menuitem: texto "Animation Example"
++    finalizar menu
++
++    iniciar menu: texto "Help"
++      menuitem: texto "Search", deshabilitado
++      menuitem: texto "Online Manual", visible falso
++      separador menuitem:
++      menuitem: texto "About", al_accion: handleAboutAction # onAction
++    finalizar menu
++
++  finalizar menubar
++finalizar vbox
++---------------- Ejemplo de MenuBar, Menu ---------------
++ventana: Ejemplo de MenuBar-Menu-MenuItem
++dimensiones: 700x500
++
++menubar: estilo menu-principal
++	menu: texto "Archivo"
++        item: texto "Nuevo"
++        item: texto "Salir"
++    end menu
++	menu: texto "Editar"
++        	item: texto "Nuevo"
++        	item: texto "Salir"
++    	end menu
++end menubar
++------------------ Ejemplo de menu item probado y testado ----------------
++ventana: Menus App
++dimensiones: 800x400
++
++menubar: id menuBar
++	menu: texto "File"
++		menuitem: texto "New"
++      		menuitem: texto "Open"
++      		menuitem: texto "Save"
++      		menuitem: texto "Save As"
++      		menuitem: texto "Exit"
++	end menu
++
++	menu: texto "JavaFX 2.0 Examples"
++		menuitem: texto "Text Example"
++		menuitem: texto "Objects Example"
++		menuitem: texto "Animation Example"
++	end menu
++
++	menu: texto "Help"
++		menuitem: texto "Search", deshabilitado
++		menuitem: texto "Online Manual", visible falso
++		menuitem: texto "About", al_accion: handleAboutAction
++	end menu
++end menubar
++------------------------
++------------------------ Formulario Viual Anidado ---------------------
++ventana: Formulario Visual Interactivo
++dimensiones: 900x700
++color RGB: 230,240,255
++
++iniciar vbox: espaciado 20, padding 30x40, alineacion top-center, estilo fondo-claro
++    label: texto "📝 Registro de Usuario", estilo titulo-seccion
++
++    iniciar hbox: espaciado 15, alineacion center-left
++        label: texto "Nombre:"
++        textfield: id nombre, prefWidth 300
++    finalizar hbox
++
++    iniciar hbox: espaciado 15, alineacion center-left
++        label: texto "Correo:"
++        textfield: id correo, prefWidth 300
++    finalizar hbox
++
++    iniciar hbox: espaciado 15, alineacion center-left
++        label: texto "Contraseña:"
++        passwordfield: id pass, prefWidth 300
++    finalizar hbox
++
++    iniciar hbox: espaciado 20, alineacion center, padding 20x0, vgrow always
++        boton: texto "Registrar", id btnAceptar, estilo primario
++        boton: texto "Cancelar", id btnCancelar, estilo secundario
++    finalizar hbox
++
++finalizar vbox
++
++al clic btnAceptar: mostrar mensaje "Usuario registrado con éxito"
++al clic btnCancelar: cerrar ventana
++
++------------------------
++pane:
++  color RGB: 230,230,230
++  label: Panel base
++  vbox: espaciado 12
++    label: Contenido
++  end vbox
++end pane
++
++stackpane:
++  color RGB: 240,240,240
++  label: Centrado
++end stackpane
++
++anchorpane:
++  label: ¡Anclado!
++  posicion: 100,50
++end anchorpane
+Index: .idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+new file mode 100644
+--- /dev/null	(date 1750710846031)
++++ b/.idea/encodings.xml	(date 1750710846031)
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding">
++    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+new file mode 100644
+--- /dev/null	(date 1750710680685)
++++ b/pom.xml	(date 1750710680685)
+@@ -0,0 +1,76 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <groupId>com.dslengine</groupId>
++    <artifactId>dsl</artifactId>
++    <version>1.0-SNAPSHOT</version>
++    <name>dsl</name>
++
++    <properties>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <junit.version>5.10.2</junit.version>
++    </properties>
++
++    <dependencies>
++        <dependency>
++            <groupId>org.openjfx</groupId>
++            <artifactId>javafx-controls</artifactId>
++            <version>17.0.6</version>
++        </dependency>
++        <dependency>
++            <groupId>org.openjfx</groupId>
++            <artifactId>javafx-fxml</artifactId>
++            <version>17.0.6</version>
++        </dependency>
++
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter-api</artifactId>
++            <version>${junit.version}</version>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter-engine</artifactId>
++            <version>${junit.version}</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.13.0</version>
++                <configuration>
++                    <source>17</source>
++                    <target>17</target>
++                </configuration>
++            </plugin>
++            <plugin>
++                <groupId>org.openjfx</groupId>
++                <artifactId>javafx-maven-plugin</artifactId>
++                <version>0.0.8</version>
++                <executions>
++                    <execution>
++                        <!-- Default configuration for running with: mvn clean javafx:run -->
++                        <id>default-cli</id>
++                        <configuration>
++                            <mainClass>com.dslengine.dsl/com.dslengine.dslui.DslApp</mainClass>
++                            <launcher>app</launcher>
++                            <jlinkZipName>app</jlinkZipName>
++                            <jlinkImageName>app</jlinkImageName>
++                            <noManPages>true</noManPages>
++                            <stripDebug>true</stripDebug>
++                            <noHeaderFiles>true</noHeaderFiles>
++                        </configuration>
++                    </execution>
++                </executions>
++            </plugin>
++        </plugins>
++    </build>
++</project>
+\ No newline at end of file
+Index: document/cambios/Plantilla-changelog.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/document/cambios/Plantilla-changelog.md b/document/cambios/Plantilla-changelog.md
+new file mode 100644
+--- /dev/null	(date 1753089510811)
++++ b/document/cambios/Plantilla-changelog.md	(date 1753089510811)
+@@ -0,0 +1,30 @@
++## 🔄 Cambio Realizado
++
++**Fecha:** YYYY-MM-DD  
++**Autor:** Nombre Apellido  
++**Área afectada:** `NombreClase.java`, `NombreMétodo()`, `Paquete`
++
++### 📝 Descripción Técnica
++Breve resumen del cambio: qué se hizo, cómo se hizo y sobre qué componentes impacta.  
++Ejemplo: "Se agregó validación previa en `process()` para verificar la compatibilidad de los elementos hijos en `StackPane`."
++
++### 🎯 Justificación
++¿Por qué se hizo este cambio? Explicación del problema previo, limitación detectada o necesidad funcional.  
++Ejemplo: "Evitar errores de anidamiento al registrar nuevos tipos de layouts que no admiten ciertos nodos hijos."
++
++### 🧪 Validaciones y Comprobaciones
++- [x] Validación de tipos entre contenedor y nodo hijo
++- [x] Verificación de cierre de etiquetas en DSL
++- [x] Casos extremos probados (`EmptyPane`, `NestedVBox`)
++- [x] Prueba con nodo inválido (`Menu` en `AnchorPane`)
++
++### 📊 Impacto y Beneficio Esperado
++Explicá cómo esto mejora la extensibilidad, evita errores o permite futuras integraciones.  
++Ejemplo: "La validación anticipada permite escalar el parser sin modificar la lógica base."
++
++### 📎 Referencias Cruzadas
++- Issue relacionado: `#NN`
++- Commit: `hash_commit`
++- Pull Request (si aplica): `URL`
++
++---
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/uiDesigner.xml b/.idea/uiDesigner.xml
+new file mode 100644
+--- /dev/null	(date 1750710846040)
++++ b/.idea/uiDesigner.xml	(date 1750710846040)
+@@ -0,0 +1,124 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.svg" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.svg" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.svg" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.svg" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
+\ No newline at end of file
+Index: mvnw.cmd
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/mvnw.cmd b/mvnw.cmd
+new file mode 100644
+--- /dev/null	(date 1750700151588)
++++ b/mvnw.cmd	(date 1750700151588)
+@@ -0,0 +1,188 @@
++@REM ----------------------------------------------------------------------------
++@REM Licensed to the Apache Software Foundation (ASF) under one
++@REM or more contributor license agreements.  See the NOTICE file
++@REM distributed with this work for additional information
++@REM regarding copyright ownership.  The ASF licenses this file
++@REM to you under the Apache License, Version 2.0 (the
++@REM "License"); you may not use this file except in compliance
++@REM with the License.  You may obtain a copy of the License at
++@REM
++@REM    https://www.apache.org/licenses/LICENSE-2.0
++@REM
++@REM Unless required by applicable law or agreed to in writing,
++@REM software distributed under the License is distributed on an
++@REM "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++@REM KIND, either express or implied.  See the License for the
++@REM specific language governing permissions and limitations
++@REM under the License.
++@REM ----------------------------------------------------------------------------
++
++@REM ----------------------------------------------------------------------------
++@REM Maven Start Up Batch script
++@REM
++@REM Required ENV vars:
++@REM JAVA_HOME - location of a JDK home dir
++@REM
++@REM Optional ENV vars
++@REM M2_HOME - location of maven2's installed home dir
++@REM MAVEN_BATCH_ECHO - set to 'on' to enable the echoing of the batch commands
++@REM MAVEN_BATCH_PAUSE - set to 'on' to wait for a keystroke before ending
++@REM MAVEN_OPTS - parameters passed to the Java VM when running Maven
++@REM     e.g. to debug Maven itself, use
++@REM set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
++@REM MAVEN_SKIP_RC - flag to disable loading of mavenrc files
++@REM ----------------------------------------------------------------------------
++
++@REM Begin all REM lines with '@' in case MAVEN_BATCH_ECHO is 'on'
++@echo off
++@REM set title of command window
++title %0
++@REM enable echoing by setting MAVEN_BATCH_ECHO to 'on'
++@if "%MAVEN_BATCH_ECHO%" == "on"  echo %MAVEN_BATCH_ECHO%
++
++@REM set %HOME% to equivalent of $HOME
++if "%HOME%" == "" (set "HOME=%HOMEDRIVE%%HOMEPATH%")
++
++@REM Execute a user defined script before this one
++if not "%MAVEN_SKIP_RC%" == "" goto skipRcPre
++@REM check for pre script, once with legacy .bat ending and once with .cmd ending
++if exist "%USERPROFILE%\mavenrc_pre.bat" call "%USERPROFILE%\mavenrc_pre.bat" %*
++if exist "%USERPROFILE%\mavenrc_pre.cmd" call "%USERPROFILE%\mavenrc_pre.cmd" %*
++:skipRcPre
++
++@setlocal
++
++set ERROR_CODE=0
++
++@REM To isolate internal variables from possible post scripts, we use another setlocal
++@setlocal
++
++@REM ==== START VALIDATION ====
++if not "%JAVA_HOME%" == "" goto OkJHome
++
++echo.
++echo Error: JAVA_HOME not found in your environment. >&2
++echo Please set the JAVA_HOME variable in your environment to match the >&2
++echo location of your Java installation. >&2
++echo.
++goto error
++
++:OkJHome
++if exist "%JAVA_HOME%\bin\java.exe" goto init
++
++echo.
++echo Error: JAVA_HOME is set to an invalid directory. >&2
++echo JAVA_HOME = "%JAVA_HOME%" >&2
++echo Please set the JAVA_HOME variable in your environment to match the >&2
++echo location of your Java installation. >&2
++echo.
++goto error
++
++@REM ==== END VALIDATION ====
++
++:init
++
++@REM Find the project base dir, i.e. the directory that contains the folder ".mvn".
++@REM Fallback to current working directory if not found.
++
++set MAVEN_PROJECTBASEDIR=%MAVEN_BASEDIR%
++IF NOT "%MAVEN_PROJECTBASEDIR%"=="" goto endDetectBaseDir
++
++set EXEC_DIR=%CD%
++set WDIR=%EXEC_DIR%
++:findBaseDir
++IF EXIST "%WDIR%"\.mvn goto baseDirFound
++cd ..
++IF "%WDIR%"=="%CD%" goto baseDirNotFound
++set WDIR=%CD%
++goto findBaseDir
++
++:baseDirFound
++set MAVEN_PROJECTBASEDIR=%WDIR%
++cd "%EXEC_DIR%"
++goto endDetectBaseDir
++
++:baseDirNotFound
++set MAVEN_PROJECTBASEDIR=%EXEC_DIR%
++cd "%EXEC_DIR%"
++
++:endDetectBaseDir
++
++IF NOT EXIST "%MAVEN_PROJECTBASEDIR%\.mvn\jvm.config" goto endReadAdditionalConfig
++
++@setlocal EnableExtensions EnableDelayedExpansion
++for /F "usebackq delims=" %%a in ("%MAVEN_PROJECTBASEDIR%\.mvn\jvm.config") do set JVM_CONFIG_MAVEN_PROPS=!JVM_CONFIG_MAVEN_PROPS! %%a
++@endlocal & set JVM_CONFIG_MAVEN_PROPS=%JVM_CONFIG_MAVEN_PROPS%
++
++:endReadAdditionalConfig
++
++SET MAVEN_JAVA_EXE="%JAVA_HOME%\bin\java.exe"
++set WRAPPER_JAR="%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar"
++set WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
++
++set DOWNLOAD_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar"
++
++FOR /F "usebackq tokens=1,2 delims==" %%A IN ("%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.properties") DO (
++    IF "%%A"=="wrapperUrl" SET DOWNLOAD_URL=%%B
++)
++
++@REM Extension to allow automatically downloading the maven-wrapper.jar from Maven-central
++@REM This allows using the maven wrapper in projects that prohibit checking in binary data.
++if exist %WRAPPER_JAR% (
++    if "%MVNW_VERBOSE%" == "true" (
++        echo Found %WRAPPER_JAR%
++    )
++) else (
++    if not "%MVNW_REPOURL%" == "" (
++        SET DOWNLOAD_URL="%MVNW_REPOURL%/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar"
++    )
++    if "%MVNW_VERBOSE%" == "true" (
++        echo Couldn't find %WRAPPER_JAR%, downloading it ...
++        echo Downloading from: %DOWNLOAD_URL%
++    )
++
++    powershell -Command "&{"^
++		"$webclient = new-object System.Net.WebClient;"^
++		"if (-not ([string]::IsNullOrEmpty('%MVNW_USERNAME%') -and [string]::IsNullOrEmpty('%MVNW_PASSWORD%'))) {"^
++		"$webclient.Credentials = new-object System.Net.NetworkCredential('%MVNW_USERNAME%', '%MVNW_PASSWORD%');"^
++		"}"^
++		"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webclient.DownloadFile('%DOWNLOAD_URL%', '%WRAPPER_JAR%')"^
++		"}"
++    if "%MVNW_VERBOSE%" == "true" (
++        echo Finished downloading %WRAPPER_JAR%
++    )
++)
++@REM End of extension
++
++@REM Provide a "standardized" way to retrieve the CLI args that will
++@REM work with both Windows and non-Windows executions.
++set MAVEN_CMD_LINE_ARGS=%*
++
++%MAVEN_JAVA_EXE% ^
++  %JVM_CONFIG_MAVEN_PROPS% ^
++  %MAVEN_OPTS% ^
++  %MAVEN_DEBUG_OPTS% ^
++  -classpath %WRAPPER_JAR% ^
++  "-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%" ^
++  %WRAPPER_LAUNCHER% %MAVEN_CONFIG% %*
++if ERRORLEVEL 1 goto error
++goto end
++
++:error
++set ERROR_CODE=1
++
++:end
++@endlocal & set ERROR_CODE=%ERROR_CODE%
++
++if not "%MAVEN_SKIP_RC%"=="" goto skipRcPost
++@REM check for post script, once with legacy .bat ending and once with .cmd ending
++if exist "%USERPROFILE%\mavenrc_post.bat" call "%USERPROFILE%\mavenrc_post.bat"
++if exist "%USERPROFILE%\mavenrc_post.cmd" call "%USERPROFILE%\mavenrc_post.cmd"
++:skipRcPost
++
++@REM pause the script if MAVEN_BATCH_PAUSE is set to 'on'
++if "%MAVEN_BATCH_PAUSE%"=="on" pause
++
++if "%MAVEN_TERMINATE_CMD%"=="on" exit %ERROR_CODE%
++
++cmd /C exit /B %ERROR_CODE%
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+--- /dev/null	(date 1750700151589)
++++ b/.gitignore	(date 1750700151589)
+@@ -0,0 +1,38 @@
++target/
++!.mvn/wrapper/maven-wrapper.jar
++!**/src/main/**/target/
++!**/src/test/**/target/
++
++### IntelliJ IDEA ###
++.idea/modules.xml
++.idea/jarRepositories.xml
++.idea/compiler.xml
++.idea/libraries/
++*.iws
++*.iml
++*.ipr
++
++### Eclipse ###
++.apt_generated
++.classpath
++.factorypath
++.project
++.settings
++.springBeans
++.sts4-cache
++
++### NetBeans ###
++/nbproject/private/
++/nbbuild/
++/dist/
++/nbdist/
++/.nb-gradle/
++build/
++!**/src/main/**/build/
++!**/src/test/**/build/
++
++### VS Code ###
++.vscode/
++
++### Mac OS ###
++.DS_Store
+\ No newline at end of file
+Index: mvnw
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/mvnw b/mvnw
+new file mode 100755
+--- /dev/null	(date 1750700151586)
++++ b/mvnw	(date 1750700151586)
+@@ -0,0 +1,316 @@
++#!/bin/sh
++# ----------------------------------------------------------------------------
++# Licensed to the Apache Software Foundation (ASF) under one
++# or more contributor license agreements.  See the NOTICE file
++# distributed with this work for additional information
++# regarding copyright ownership.  The ASF licenses this file
++# to you under the Apache License, Version 2.0 (the
++# "License"); you may not use this file except in compliance
++# with the License.  You may obtain a copy of the License at
++#
++#    https://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing,
++# software distributed under the License is distributed on an
++# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++# KIND, either express or implied.  See the License for the
++# specific language governing permissions and limitations
++# under the License.
++# ----------------------------------------------------------------------------
++
++# ----------------------------------------------------------------------------
++# Maven Start Up Batch script
++#
++# Required ENV vars:
++# ------------------
++#   JAVA_HOME - location of a JDK home dir
++#
++# Optional ENV vars
++# -----------------
++#   M2_HOME - location of maven2's installed home dir
++#   MAVEN_OPTS - parameters passed to the Java VM when running Maven
++#     e.g. to debug Maven itself, use
++#       set MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
++#   MAVEN_SKIP_RC - flag to disable loading of mavenrc files
++# ----------------------------------------------------------------------------
++
++if [ -z "$MAVEN_SKIP_RC" ] ; then
++
++  if [ -f /usr/local/etc/mavenrc ] ; then
++    . /usr/local/etc/mavenrc
++  fi
++
++  if [ -f /etc/mavenrc ] ; then
++    . /etc/mavenrc
++  fi
++
++  if [ -f "$HOME/.mavenrc" ] ; then
++    . "$HOME/.mavenrc"
++  fi
++
++fi
++
++# OS specific support.  $var _must_ be set to either true or false.
++cygwin=false;
++darwin=false;
++mingw=false
++case "`uname`" in
++  CYGWIN*) cygwin=true ;;
++  MINGW*) mingw=true;;
++  Darwin*) darwin=true
++    # Use /usr/libexec/java_home if available, otherwise fall back to /Library/Java/Home
++    # See https://developer.apple.com/library/mac/qa/qa1170/_index.html
++    if [ -z "$JAVA_HOME" ]; then
++      if [ -x "/usr/libexec/java_home" ]; then
++        export JAVA_HOME="`/usr/libexec/java_home`"
++      else
++        export JAVA_HOME="/Library/Java/Home"
++      fi
++    fi
++    ;;
++esac
++
++if [ -z "$JAVA_HOME" ] ; then
++  if [ -r /etc/gentoo-release ] ; then
++    JAVA_HOME=`java-config --jre-home`
++  fi
++fi
++
++if [ -z "$M2_HOME" ] ; then
++  ## resolve links - $0 may be a link to maven's home
++  PRG="$0"
++
++  # need this for relative symlinks
++  while [ -h "$PRG" ] ; do
++    ls=`ls -ld "$PRG"`
++    link=`expr "$ls" : '.*-> \(.*\)$'`
++    if expr "$link" : '/.*' > /dev/null; then
++      PRG="$link"
++    else
++      PRG="`dirname "$PRG"`/$link"
++    fi
++  done
++
++  saveddir=`pwd`
++
++  M2_HOME=`dirname "$PRG"`/..
++
++  # make it fully qualified
++  M2_HOME=`cd "$M2_HOME" && pwd`
++
++  cd "$saveddir"
++  # echo Using m2 at $M2_HOME
++fi
++
++# For Cygwin, ensure paths are in UNIX format before anything is touched
++if $cygwin ; then
++  [ -n "$M2_HOME" ] &&
++    M2_HOME=`cygpath --unix "$M2_HOME"`
++  [ -n "$JAVA_HOME" ] &&
++    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
++  [ -n "$CLASSPATH" ] &&
++    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
++fi
++
++# For Mingw, ensure paths are in UNIX format before anything is touched
++if $mingw ; then
++  [ -n "$M2_HOME" ] &&
++    M2_HOME="`(cd "$M2_HOME"; pwd)`"
++  [ -n "$JAVA_HOME" ] &&
++    JAVA_HOME="`(cd "$JAVA_HOME"; pwd)`"
++fi
++
++if [ -z "$JAVA_HOME" ]; then
++  javaExecutable="`which javac`"
++  if [ -n "$javaExecutable" ] && ! [ "`expr \"$javaExecutable\" : '\([^ ]*\)'`" = "no" ]; then
++    # readlink(1) is not available as standard on Solaris 10.
++    readLink=`which readlink`
++    if [ ! `expr "$readLink" : '\([^ ]*\)'` = "no" ]; then
++      if $darwin ; then
++        javaHome="`dirname \"$javaExecutable\"`"
++        javaExecutable="`cd \"$javaHome\" && pwd -P`/javac"
++      else
++        javaExecutable="`readlink -f \"$javaExecutable\"`"
++      fi
++      javaHome="`dirname \"$javaExecutable\"`"
++      javaHome=`expr "$javaHome" : '\(.*\)/bin'`
++      JAVA_HOME="$javaHome"
++      export JAVA_HOME
++    fi
++  fi
++fi
++
++if [ -z "$JAVACMD" ] ; then
++  if [ -n "$JAVA_HOME"  ] ; then
++    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
++      # IBM's JDK on AIX uses strange locations for the executables
++      JAVACMD="$JAVA_HOME/jre/sh/java"
++    else
++      JAVACMD="$JAVA_HOME/bin/java"
++    fi
++  else
++    JAVACMD="`\\unset -f command; \\command -v java`"
++  fi
++fi
++
++if [ ! -x "$JAVACMD" ] ; then
++  echo "Error: JAVA_HOME is not defined correctly." >&2
++  echo "  We cannot execute $JAVACMD" >&2
++  exit 1
++fi
++
++if [ -z "$JAVA_HOME" ] ; then
++  echo "Warning: JAVA_HOME environment variable is not set."
++fi
++
++CLASSWORLDS_LAUNCHER=org.codehaus.plexus.classworlds.launcher.Launcher
++
++# traverses directory structure from process work directory to filesystem root
++# first directory with .mvn subdirectory is considered project base directory
++find_maven_basedir() {
++
++  if [ -z "$1" ]
++  then
++    echo "Path not specified to find_maven_basedir"
++    return 1
++  fi
++
++  basedir="$1"
++  wdir="$1"
++  while [ "$wdir" != '/' ] ; do
++    if [ -d "$wdir"/.mvn ] ; then
++      basedir=$wdir
++      break
++    fi
++    # workaround for JBEAP-8937 (on Solaris 10/Sparc)
++    if [ -d "${wdir}" ]; then
++      wdir=`cd "$wdir/.."; pwd`
++    fi
++    # end of workaround
++  done
++  echo "${basedir}"
++}
++
++# concatenates all lines of a file
++concat_lines() {
++  if [ -f "$1" ]; then
++    echo "$(tr -s '\n' ' ' < "$1")"
++  fi
++}
++
++BASE_DIR=`find_maven_basedir "$(pwd)"`
++if [ -z "$BASE_DIR" ]; then
++  exit 1;
++fi
++
++##########################################################################################
++# Extension to allow automatically downloading the maven-wrapper.jar from Maven-central
++# This allows using the maven wrapper in projects that prohibit checking in binary data.
++##########################################################################################
++if [ -r "$BASE_DIR/.mvn/wrapper/maven-wrapper.jar" ]; then
++    if [ "$MVNW_VERBOSE" = true ]; then
++      echo "Found .mvn/wrapper/maven-wrapper.jar"
++    fi
++else
++    if [ "$MVNW_VERBOSE" = true ]; then
++      echo "Couldn't find .mvn/wrapper/maven-wrapper.jar, downloading it ..."
++    fi
++    if [ -n "$MVNW_REPOURL" ]; then
++      jarUrl="$MVNW_REPOURL/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar"
++    else
++      jarUrl="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar"
++    fi
++    while IFS="=" read key value; do
++      case "$key" in (wrapperUrl) jarUrl="$value"; break ;;
++      esac
++    done < "$BASE_DIR/.mvn/wrapper/maven-wrapper.properties"
++    if [ "$MVNW_VERBOSE" = true ]; then
++      echo "Downloading from: $jarUrl"
++    fi
++    wrapperJarPath="$BASE_DIR/.mvn/wrapper/maven-wrapper.jar"
++    if $cygwin; then
++      wrapperJarPath=`cygpath --path --windows "$wrapperJarPath"`
++    fi
++
++    if command -v wget > /dev/null; then
++        if [ "$MVNW_VERBOSE" = true ]; then
++          echo "Found wget ... using wget"
++        fi
++        if [ -z "$MVNW_USERNAME" ] || [ -z "$MVNW_PASSWORD" ]; then
++            wget "$jarUrl" -O "$wrapperJarPath" || rm -f "$wrapperJarPath"
++        else
++            wget --http-user=$MVNW_USERNAME --http-password=$MVNW_PASSWORD "$jarUrl" -O "$wrapperJarPath" || rm -f "$wrapperJarPath"
++        fi
++    elif command -v curl > /dev/null; then
++        if [ "$MVNW_VERBOSE" = true ]; then
++          echo "Found curl ... using curl"
++        fi
++        if [ -z "$MVNW_USERNAME" ] || [ -z "$MVNW_PASSWORD" ]; then
++            curl -o "$wrapperJarPath" "$jarUrl" -f
++        else
++            curl --user $MVNW_USERNAME:$MVNW_PASSWORD -o "$wrapperJarPath" "$jarUrl" -f
++        fi
++
++    else
++        if [ "$MVNW_VERBOSE" = true ]; then
++          echo "Falling back to using Java to download"
++        fi
++        javaClass="$BASE_DIR/.mvn/wrapper/MavenWrapperDownloader.java"
++        # For Cygwin, switch paths to Windows format before running javac
++        if $cygwin; then
++          javaClass=`cygpath --path --windows "$javaClass"`
++        fi
++        if [ -e "$javaClass" ]; then
++            if [ ! -e "$BASE_DIR/.mvn/wrapper/MavenWrapperDownloader.class" ]; then
++                if [ "$MVNW_VERBOSE" = true ]; then
++                  echo " - Compiling MavenWrapperDownloader.java ..."
++                fi
++                # Compiling the Java class
++                ("$JAVA_HOME/bin/javac" "$javaClass")
++            fi
++            if [ -e "$BASE_DIR/.mvn/wrapper/MavenWrapperDownloader.class" ]; then
++                # Running the downloader
++                if [ "$MVNW_VERBOSE" = true ]; then
++                  echo " - Running MavenWrapperDownloader.java ..."
++                fi
++                ("$JAVA_HOME/bin/java" -cp .mvn/wrapper MavenWrapperDownloader "$MAVEN_PROJECTBASEDIR")
++            fi
++        fi
++    fi
++fi
++##########################################################################################
++# End of extension
++##########################################################################################
++
++export MAVEN_PROJECTBASEDIR=${MAVEN_BASEDIR:-"$BASE_DIR"}
++if [ "$MVNW_VERBOSE" = true ]; then
++  echo $MAVEN_PROJECTBASEDIR
++fi
++MAVEN_OPTS="$(concat_lines "$MAVEN_PROJECTBASEDIR/.mvn/jvm.config") $MAVEN_OPTS"
++
++# For Cygwin, switch paths to Windows format before running java
++if $cygwin; then
++  [ -n "$M2_HOME" ] &&
++    M2_HOME=`cygpath --path --windows "$M2_HOME"`
++  [ -n "$JAVA_HOME" ] &&
++    JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
++  [ -n "$CLASSPATH" ] &&
++    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
++  [ -n "$MAVEN_PROJECTBASEDIR" ] &&
++    MAVEN_PROJECTBASEDIR=`cygpath --path --windows "$MAVEN_PROJECTBASEDIR"`
++fi
++
++# Provide a "standardized" way to retrieve the CLI args that will
++# work with both Windows and non-Windows executions.
++MAVEN_CMD_LINE_ARGS="$MAVEN_CONFIG $@"
++export MAVEN_CMD_LINE_ARGS
++
++WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
++
++exec "$JAVACMD" \
++  $MAVEN_OPTS \
++  $MAVEN_DEBUG_OPTS \
++  -classpath "$MAVEN_PROJECTBASEDIR/.mvn/wrapper/maven-wrapper.jar" \
++  "-Dmaven.home=${M2_HOME}" \
++  "-Dmaven.multiModuleProjectDirectory=${MAVEN_PROJECTBASEDIR}" \
++  ${WRAPPER_LAUNCHER} $MAVEN_CONFIG "$@"
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+new file mode 100644
+--- /dev/null	(date 1751108797711)
++++ b/README.md	(date 1751108797711)
+@@ -0,0 +1,76 @@
++Cómo Funciona este Ejemplo
++commandTextArea: Es tu "terminal" donde el usuario escribe.
++generateWindow(): Este método se llama cuando el usuario hace clic en "Generar Ventana".
++commands.split("\\r?\\n"): Divide todo el texto en líneas individuales.
++Bucle for (String line : lines): Itera sobre cada línea para procesar los comandos.
++if (line.startsWith("comando:")): Identifica qué tipo de comando es.
++Extracción de Valores: Utiliza substring() y trim() para obtener el valor después del comando.
++Expresiones Regulares (Pattern, Matcher): Son fundamentales para validar y extraer valores con formatos específicos (ej. WxH para dimensiones, R-G-B para colores, X,Y para posiciones).
++Creación de Componentes:
++new Stage(): Crea una nueva ventana.
++new Pane(): Crea un contenedor base.
++new Button(): Crea un botón.
++rootPane.getChildren().add(newButton): Añade el botón al panel.
++Aplicación de Propiedades:
++generatedStage.setTitle(...), setScene(...), show(): Configura y muestra la ventana.
++rootPane.setBackground(...): Establece el color de fondo del panel.
++newButton.setLayoutX(x), newButton.setLayoutY(y): Posiciona el botón (solo funciona bien con Pane).
++Manejo de Errores: Se incluye un try-catch para capturar IllegalArgumentException (si el formato es incorrecto) o cualquier otra excepción.
++Cómo Expandir este Proyecto (Pasos Siguientes)
++Más Comandos:
++label: Tu texto
++texto: Campo de texto inicial (para TextField)
++checkbox: Mi Opción
++imagen: ruta/a/imagen.png
++menu: Archivo, Editar
++submenunombre: Abrir, Guardar
++Anidamiento y Contenedores: Tu mayor desafío será cómo manejar la jerarquía (un panel dentro de otro, un botón dentro de un panel específico). Podrías necesitar:
++Un concepto de "contenedor actual" al que se le añaden los elementos.
++Comandos como iniciar panel: nombre, finalizar panel.
++Especificar el tipo de panel (panel VBox:, panel HBox:).
++Propiedades Más Avanzadas:
++tamaño letra: 20
++color texto: R-G-B
++margen: 10,20,30,40 (top, right, bottom, left)
++Eventos: Cómo especificar la lógica para un onAction. Esto es más complejo. Podrías tener:
++onAction boton ClickMe: mensaje "Hola!"
++Esto implicaría que tu parser genere código Java o ejecute una acción predefinida.
++Persistencia: Guardar y cargar tus descripciones de UI.
++Interfaz Gráfica de Errores: Mostrar los errores de parsing de una forma más amigable.
++Este es un excelente proyecto para aprender sobre parsing, diseño de lenguajes sencillos y generación dinámica de UI en JavaFX. ¡Mucha suerte!
++
++
++----- ------ ------
++Repite el mismo patrón para HBoxStartProcessor.java y HBoxEndProcessor.java, reemplazando VBox por HBox.
++
++Manejo de Errores y Feedback
++Esto es crucial para que tu "IDE" sea usable.
++
++Validación de Sintaxis:
++Expresiones Regulares: Las estás usando y son excelentes para validar formatos (ej., WxH, R-G-B, X,Y).
++Mensajes Claros: Cuando una IllegalArgumentException es lanzada, el mensaje debe ser instructivo (ej., "Formato de dimensiones incorrecto. Use WxH.").
++Validación de Lógica (Anidamiento):
++Pila Vacía/Desbordada: Si el usuario intenta añadir un botón sin un panel padre, o finaliza un panel que no existe, tu Stack lo detectará.
++Tipos de Panel Incorrectos: En VBoxEndProcessor, podrías verificar que el currentActiveContainer sea realmente un VBox antes de hacer pop.
++Estados Inválidos: Por ejemplo, intentar establecer el color del panel antes de que se haya definido un panel, o un botón sin un contenedor.
++Feedback Visual (statusLabel):
++Tu statusLabel es perfecto para mostrar mensajes de éxito o error al usuario.
++Colores: Usa colores para indicar el tipo de mensaje (ej., rojo para errores, verde para éxito).
++Limpiar Mensajes: Asegúrate de que los mensajes se limpien después de una nueva operación o un tiempo.
++Captura de Excepciones:
++El bloque try-catch en generateWindow() es esencial para capturar cualquier Exception y mostrar un mensaje genérico al usuario ("Error desconocido al generar la ventana: " + e.getMessage()).
++e.printStackTrace() es bueno para la depuración en la consola.
++Limpieza del Estado:
++Siempre limpia la pila de contenedores (containerStack.clear()) y cierra las ventanas generadas anteriormente (generatedStage.close()) antes de intentar generar una nueva UI.
++Lo que sigue (y es más complejo)
++Propiedades compartidas: Cómo pasar propiedades como id o style a cualquier componente, o align a paneles.
++Eventos: La forma más compleja de añadir al "lenguaje" es la lógica de eventos. Podrías definir acciones predefinidas (ej., al_clic_boton: mostrar_mensaje "Hola"), o incluso permitir pequeñas porciones de código JavaScript o expresiones simples que tu aplicación interpretaría.
++Comprobación de nombres duplicados: Si permites nombrar componentes (boton: miBoton), asegúrate de que los nombres sean únicos si los necesitas para referencia posterior.
++Exportar a FXML: En lugar de solo generar la UI directamente, podrías hacer que tu aplicación genere un archivo FXML real basado en el texto. Esto sería un proyecto aún más avanzado pero le daría una utilidad enorme para la comunidad JavaFX.
++Con esta estructura de anidamiento y la mejora en el manejo de errores, tu "IDE" de UI será mucho más potente y robusto.
++
++
++
++
++
++
