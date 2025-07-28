@@ -1,3 +1,4 @@
+HEAD
 # DSL Engine 🚀
 
 > Motor de lenguaje específico de dominio (DSL) extensible, ligero y diseñado para crear lógica dinámica de forma simple y poderosa.
@@ -102,5 +103,7 @@ Copyright (c) 2026 Denis Balbuena
 
 Todos los derechos reservados.
 Este software es propietario y confidencial. No está permitido copiar, modificar, distribuir o utilizar este código sin autorización expresa.
+
+7effcad (DSL - README)
 
 
