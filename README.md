@@ -4,15 +4,13 @@
 
 ---
 
-## 🇪🇸 Español (Principal)
-
 ### 🧠 ¿Qué es esto?
 
-DSL Engine es un motor que te permite crear y ejecutar tu propio lenguaje de programación simplificado (DSL).
+DSL Engine es un motor que te permite crear y ejecutar un lenguaje de programación simplificado (DSL).
 
 Con este proyecto puedes:
 
-- Definir tu propia sintaxis
+- Definir sintaxis simplificadas
 - Ejecutar lógica dinámica sin recompilar
 - Crear sistemas configurables
 - Extender funcionalidades mediante plugins
@@ -57,12 +55,15 @@ public interface DslPlugin {
     void initialize(DslPluginContext context);
 }
 ```
+---
 
 El contexto permite acceso a:
 
 - Motor DSL
 - Registro de funciones
 - Modificadores de sintaxis
+
+---
 
 ### 📦 Casos de uso
 
@@ -72,9 +73,13 @@ El contexto permite acceso a:
 - Plataformas low-code/no-code
 - Scripting interno en aplicaciones
 
+---
+
 ### 🧱 Estado del proyecto
 
-🚧 En desarrollo activo
+    🚧 En desarrollo activo
+
+---
 
 ### 📌 Roadmap
 
@@ -83,9 +88,13 @@ El contexto permite acceso a:
 - Marketplace de plugins (futuro)
 - Integración con editor visual (GlassFX Workbench)
 
+---
+
 ### 🧑‍💻 Autor
 
 Cesar Denis Balbuena
+
+---
 
 📜 Licencia
 
