@@ -4,62 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="DSL - controlador dsl sin uso">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Config a Workbench.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/ColoCommandProcessor.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/CommandProcessor.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/DslApp.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/UiBuilderController.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/UiiBuilderController2.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/WindowCommandProcessor.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/cambios/CHANGELOG.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/cambios/Plantilla-changelog.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/cambios/WindowCommandProcessor.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/document/nesting.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pendientes" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/AbstractContainerStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/ButtonCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/ColorCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/CommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/DimensionsCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/GenericEndProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxEndProcessorOld.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/HBoxStartProcessorOld.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/LabelCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuBarEndProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuBarStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuEndProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuItemStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/MenuStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/PaneStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/PromTextCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/StackPaneStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/TextFieldCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/UnitParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxEndProcessorOld.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxStartProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/VBoxStartProcessorOld.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/commandprocessor/WindowCommandProcessor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/dslui/UIBuilderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/dslengine/dslui/UIBuilderControllerOriginal.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/test/UIBuilderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/dslengine/dslui/UIBuilder.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/url" afterDir="false" />
+    <list default="true" id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="DSL - FILES">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +35,7 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -111,7 +57,7 @@
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/julietacristaldo/IdeaProjects/dsl&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   },
   &quot;keyToStringList&quot;: {
     &quot;ChangesTree.GroupingKeys&quot;: [
@@ -180,22 +126,6 @@
       <option name="presentableId" value="Default" />
       <updated>1750700151904</updated>
     </task>
-    <task id="LOCAL-00001" summary="DSL - concept">
-      <option name="closed" value="true" />
-      <created>1752705682042</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1752705682042</updated>
-    </task>
-    <task id="LOCAL-00002" summary="DSL DOCUMENT ERROR FORMATO INCORRECTO X,Y">
-      <option name="closed" value="true" />
-      <created>1752920168852</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1752920168852</updated>
-    </task>
     <task id="LOCAL-00003" summary="DSL - MAIN APP">
       <option name="closed" value="true" />
       <created>1753650478947</created>
@@ -220,7 +150,375 @@
       <option name="project" value="LOCAL" />
       <updated>1753652036289</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="DSL - CLASS BUTTON">
+      <option name="closed" value="true" />
+      <created>1753652552736</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652552736</updated>
+    </task>
+    <task id="LOCAL-00007" summary="DSL - CLASS END MENU">
+      <option name="closed" value="true" />
+      <created>1753652690622</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652690622</updated>
+    </task>
+    <task id="LOCAL-00008" summary="DSL - CLASS START MENU">
+      <option name="closed" value="true" />
+      <created>1753652716466</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652716466</updated>
+    </task>
+    <task id="LOCAL-00009" summary="DSL - CLASS START MENUBAR">
+      <option name="closed" value="true" />
+      <created>1753652792340</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652792340</updated>
+    </task>
+    <task id="LOCAL-00010" summary="DSL - CLASS END MENUBAR">
+      <option name="closed" value="true" />
+      <created>1753652803295</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652803295</updated>
+    </task>
+    <task id="LOCAL-00011" summary="DSL - CLASS END HBOX OLD">
+      <option name="closed" value="true" />
+      <created>1753652837230</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652837230</updated>
+    </task>
+    <task id="LOCAL-00012" summary="DSL - CLASS START HBOX OLD">
+      <option name="closed" value="true" />
+      <created>1753652857549</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652857549</updated>
+    </task>
+    <task id="LOCAL-00013" summary="DSL - CLASS START HBOX">
+      <option name="closed" value="true" />
+      <created>1753652872283</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652872283</updated>
+    </task>
+    <task id="LOCAL-00014" summary="DSL - CLASS GENERIC END">
+      <option name="closed" value="true" />
+      <created>1753652923577</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1753652923577</updated>
+    </task>
+    <task id="LOCAL-00015" summary="DSL - CLASS START VBOX OLD">
+      <option name="closed" value="true" />
+      <created>1753653042855</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653042855</updated>
+    </task>
+    <task id="LOCAL-00016" summary="DSL - CLASS START VBOX">
+      <option name="closed" value="true" />
+      <created>1753653053342</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653053342</updated>
+    </task>
+    <task id="LOCAL-00017" summary="DSL - CLASS END VBOX OLD">
+      <option name="closed" value="true" />
+      <created>1753653077925</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653077925</updated>
+    </task>
+    <task id="LOCAL-00018" summary="DSL - urls">
+      <option name="closed" value="true" />
+      <created>1753653123052</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653123052</updated>
+    </task>
+    <task id="LOCAL-00019" summary="DSL - CHANGELOG WindowCommandProcessor.md">
+      <option name="closed" value="true" />
+      <created>1753653233404</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653233404</updated>
+    </task>
+    <task id="LOCAL-00020" summary="DSL - DOCUMENT WindowCommandProcessor.md">
+      <option name="closed" value="true" />
+      <created>1753653285323</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653285323</updated>
+    </task>
+    <task id="LOCAL-00021" summary="DSL - CLASS WINDOW COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753653348660</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653348660</updated>
+    </task>
+    <task id="LOCAL-00022" summary="DSL - CLASS UNIT PARSE">
+      <option name="closed" value="true" />
+      <created>1753653429665</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653429665</updated>
+    </task>
+    <task id="LOCAL-00023" summary="DSL - CLASS UI BUILDER CONTROLLER OLD">
+      <option name="closed" value="true" />
+      <created>1753653462830</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653462830</updated>
+    </task>
+    <task id="LOCAL-00024" summary="DSL - CLASS UI BUILDER CONTROLLER">
+      <option name="closed" value="true" />
+      <created>1753653487415</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653487415</updated>
+    </task>
+    <task id="LOCAL-00025" summary="DSL - CLASS UI BUILDER CONTROLLER">
+      <option name="closed" value="true" />
+      <created>1753653592582</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1753653592582</updated>
+    </task>
+    <task id="LOCAL-00026" summary="DSL - DOCUMENT UI BUILDER CONTROLLER">
+      <option name="closed" value="true" />
+      <created>1753662983179</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1753662983179</updated>
+    </task>
+    <task id="LOCAL-00027" summary="DSL - CLASS TEXTFIELD COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663033934</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663033934</updated>
+    </task>
+    <task id="LOCAL-00028" summary="DSL - CLASS PROMTEXT COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663083534</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663083534</updated>
+    </task>
+    <task id="LOCAL-00029" summary="DSL - CLASS START PANE">
+      <option name="closed" value="true" />
+      <created>1753663125823</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663125823</updated>
+    </task>
+    <task id="LOCAL-00030" summary="DSL - CLASS START STACKPANE">
+      <option name="closed" value="true" />
+      <created>1753663182310</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663182310</updated>
+    </task>
+    <task id="LOCAL-00031" summary="DSL - MODULE INFO">
+      <option name="closed" value="true" />
+      <created>1753663215833</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663215833</updated>
+    </task>
+    <task id="LOCAL-00032" summary="DSL - CLASS START MENU ITEM">
+      <option name="closed" value="true" />
+      <created>1753663265604</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663265604</updated>
+    </task>
+    <task id="LOCAL-00033" summary="DSL - CLASS LABEL COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663300035</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663300035</updated>
+    </task>
+    <task id="LOCAL-00034" summary="DSL - INTERFACE COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663325997</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663325997</updated>
+    </task>
+    <task id="LOCAL-00035" summary="DSL - DOCUMENT INTERFACE COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663353940</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663353940</updated>
+    </task>
+    <task id="LOCAL-00036" summary="DSL - DOCUMENT COLOR COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663379472</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663379472</updated>
+    </task>
+    <task id="LOCAL-00037" summary="DSL - DOCUMENT CHANGELOG">
+      <option name="closed" value="true" />
+      <created>1753663424550</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663424550</updated>
+    </task>
+    <task id="LOCAL-00038" summary="DSL - DOCUMENT WORKBENCH CONFIG.">
+      <option name="closed" value="true" />
+      <created>1753663467116</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663467116</updated>
+    </task>
+    <task id="LOCAL-00039" summary="DSL - DOCUMENT MAIN APP">
+      <option name="closed" value="true" />
+      <created>1753663491870</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663491870</updated>
+    </task>
+    <task id="LOCAL-00040" summary="DSL - DOCUMENT NESTING">
+      <option name="closed" value="true" />
+      <created>1753663598657</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663598657</updated>
+    </task>
+    <task id="LOCAL-00041" summary="DSL - DOCUMENT LIST PROPS, TOKENS, FEEBACK">
+      <option name="closed" value="true" />
+      <created>1753663672966</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663672966</updated>
+    </task>
+    <task id="LOCAL-00042" summary="DSL - DOCUMENT EXAMPLE TEMPLATE CHANGELOG">
+      <option name="closed" value="true" />
+      <created>1753663727648</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663727648</updated>
+    </task>
+    <task id="LOCAL-00043" summary="DSL - CLASS DIMENSIONS COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753663970147</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1753663970147</updated>
+    </task>
+    <task id="LOCAL-00044" summary="DSL - SCRIPTS DSL EXAMPLES">
+      <option name="closed" value="true" />
+      <created>1753664126129</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664126129</updated>
+    </task>
+    <task id="LOCAL-00045" summary="DSL - CLASS COLOR COMMAND PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753664163028</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664163028</updated>
+    </task>
+    <task id="LOCAL-00046" summary="DSL - CLASS ABSTRACT CONTAINER PROCESSOR">
+      <option name="closed" value="true" />
+      <created>1753664199548</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664199548</updated>
+    </task>
+    <task id="LOCAL-00047" summary="DSL - README">
+      <option name="closed" value="true" />
+      <created>1753664232839</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664232839</updated>
+    </task>
+    <task id="LOCAL-00048" summary="DSL - POM DEPENDENCY JAVAFX CONTROLS">
+      <option name="closed" value="true" />
+      <created>1753664588479</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664588479</updated>
+    </task>
+    <task id="LOCAL-00049" summary="DSL - FXML INTERFACES">
+      <option name="closed" value="true" />
+      <created>1753664933422</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1753664933422</updated>
+    </task>
+    <task id="LOCAL-00050" summary="DSL - DOCUMENT CLASS UI BUILDER CONTROLLER">
+      <option name="closed" value="true" />
+      <created>1753665728280</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1753665728282</updated>
+    </task>
+    <task id="LOCAL-00051" summary="DSL - FILES">
+      <option name="closed" value="true" />
+      <created>1753665770016</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1753665770016</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="UpdateCopyrightCheckinHandler">
@@ -237,6 +535,21 @@
     </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="*" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -247,6 +560,17 @@
                   <entry key="Show.Git.Branches" value="true" />
                 </map>
               </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="user">
+                    <value>
+                      <list>
+                        <option value="*" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
             </State>
           </value>
         </entry>
@@ -254,11 +578,31 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DSL - concept" />
-    <MESSAGE value="DSL DOCUMENT ERROR FORMATO INCORRECTO X,Y" />
-    <MESSAGE value="DSL - MAIN APP" />
-    <MESSAGE value="DSL - Domains-Specific Languaje concept" />
-    <MESSAGE value="DSL - controlador dsl sin uso" />
-    <option name="LAST_COMMIT_MESSAGE" value="DSL - controlador dsl sin uso" />
+    <MESSAGE value="DSL - CLASS START PANE" />
+    <MESSAGE value="DSL - CLASS START STACKPANE" />
+    <MESSAGE value="DSL - MODULE INFO" />
+    <MESSAGE value="DSL - CLASS START MENU ITEM" />
+    <MESSAGE value="DSL - CLASS LABEL COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - INTERFACE COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - DOCUMENT INTERFACE COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - DOCUMENT COLOR COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - DOCUMENT CHANGELOG" />
+    <MESSAGE value="DSL - DOCUMENT WORKBENCH CONFIG." />
+    <MESSAGE value="DSL - DOCUMENT MAIN APP" />
+    <MESSAGE value="DSL - DOCUMENT ERROR FORMATO INCORRECTO X,Y" />
+    <MESSAGE value="DSL - DOCUMENT ERROR FORMATO INCORRECTO X,Y" />
+    <MESSAGE value="DSL - DOCUMENT NESTING" />
+    <MESSAGE value="DSL - DOCUMENT LIST PROPS, TOKENS, FEEBACK" />
+    <MESSAGE value="DSL - DOCUMENT EXAMPLE TEMPLATE CHANGELOG" />
+    <MESSAGE value="DSL - CLASS DIMENSIONS COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - SCRIPTS DSL EXAMPLES" />
+    <MESSAGE value="DSL - CLASS COLOR COMMAND PROCESSOR" />
+    <MESSAGE value="DSL - CLASS ABSTRACT CONTAINER PROCESSOR" />
+    <MESSAGE value="DSL - README" />
+    <MESSAGE value="DSL - POM DEPENDENCY JAVAFX CONTROLS" />
+    <MESSAGE value="DSL - FXML INTERFACES" />
+    <MESSAGE value="DSL - DOCUMENT CLASS UI BUILDER CONTROLLER" />
+    <MESSAGE value="DSL - FILES" />
+    <option name="LAST_COMMIT_MESSAGE" value="DSL - FILES" />
   </component>
 </project>
