@@ -1,0 +1,7 @@
+lista de pendientes.
+- Tokens -> Tokenisar
+- Props -> promtText para TexField y TextArea.
+- armemos un sistema de CommandDispatcher para interpretar los comandos del TextArea con patrones o
+gramática más expresiva
+- clase CommandFeedBack para errores y confirmaciones de la terminal DSl.
+

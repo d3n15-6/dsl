@@ -1,0 +1,65 @@
+------------------------Copilot----------------------------
+                      Documentación
+-----------------------------------------------------------
+1. El inicio de todo.
+https://copilot.microsoft.com/chats/xMtVoYRqn2JffwzfmESkn
+2. nesting segunda parte.
+https://copilot.microsoft.com/chats/mqX1W6JGZDdWvoMVQvKfV
+3. Error de anidamiento.
+https://copilot.microsoft.com/chats/1wWJejfxh9iy12SqDTBC6
+-----------------------------------------------------------
+
+
+https://blog.pleets.org/article/es/16-plugins-de-sublime-text
+https://developers.google.com/web/shows/ttt/series-1/sublime-text-plugins?hl=es-419
+https://www.shopify.com/es/blog/los-25-mejores-plugins-de-sublime-text-para-desarrolladores-front-end
+https://gsitic.wordpress.com/2018/01/06/bii9-lenguajes-de-marca-o-etiqueta-caracteristicas-y-funcionalidades-sgml-html-xml-y-sus-derivaciones-lenguajes-de-script/
+https://docs.oracle.com/javase/8/javafx/api/javafx/fxml/doc-files/introduction_to_fxml.html
+https://miguelgomezsa.com/blog/plugins-para-sublime-text-3
+
+https://aprendendo-javafx.blogspot.com/2014/
+
+------
+System.err.println("[»]No se puede crear un VBox sin el controlador activo.");
+-----
+Preguntar esto a copilot
+-------------------------
+⚙️ ¿Qué tendrías que hacer para mantener el contexto de nesting?
+En tu UIBuilderController, cada vez que procesás una línea, podés hacer:
+[java]
+Pane container = (Pane) globalProperties.getOrDefault("currentContainer", currentRootPane);
+Node createdNode = processor.process(line, container, globalProperties, statusLabel);
+
+
+Y si el VBoxStartProcessor actualiza currentContainer, lo heredan los comandos que vienen después (hasta que hagas un end o lo resetees manualmente).
+
+-------------------------- Posible nodos interactivos --------------
+¿Querés que recuperemos push/pop pero como utilidad estática para futuros escenarios (como límites de nesting, o logs
+estructurados del árbol)? También podríamos visualizar cómo cambia la pila tras cada comando, como debug visual en una
+consola interactiva ⚡ ¿Te gustaría explorar eso?
+--------------------------- Samlltalk ------------------------------
+https://diegogomezdeck.blogspot.com/2005/08/la-magia-del-smalltalk-captulo-10-no.html
+....
+--------------------------- check list ------------------------------
+- javafx glassfx -> https://github.com/in-sideFX/Undecorator
+- que conviene realmente si empezar los vbox con {} o vbox end vbox. (analizar).
+- investigar que es nesting -> Si estás aplicando nesting (como lo que propusiste con VBoxStartProcessor y
+currentContainer dinámico).
+- debug interativo en la terminal o visualizador de nodos.
+- limite de nesting.
+- compildor/interprete
+- lexer/parser
+- chequeo de tipo.
+- anidamientos de ui y eventos simples.
+- eventos predefinidas.
+- URGENTE - verificar que es la propiedad texto en MenuBar, Menu, MenuItem.
+- versión modular con lambda-friendly processors
+- trazabilidad del árbol de nodos
+- generar visualizaciones del árbol de UI desde ese mismo globalProperties 💡
+- armar una estrategia de mejora evolutiva del engine o incluso
+- diseñar una sintaxis alternativa más visual
+- crear una clase base abstracta para reducir repetición en los procesadores (no implementable por ahora).
+- visualización del árbol de UI en tiempo real - (Aplicable)
+- soporte para componentes personalizados definidos por el usuario.
+- podríamos visualizar cómo cambia la pila tras cada comando, como debug visual en una consola interactiva ⚡
+- Podríamos combinarlo con un parser jerárquico o una gramática personalizada para interpretar bloques y subcomandos.
