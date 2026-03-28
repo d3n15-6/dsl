@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="DSL - FILES">
-      <change beforePath="$PROJECT_DIR$/Config a Workbench.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pendientes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/url" beforeDir="false" />
+    <list default="true" id="bbf37dfc-9b32-4244-909a-18f37121e029" name="Changes" comment="DSL - workspace commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +25,12 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="d3n15-6" />
+        <option value="d3n15-6 &lt;che.hae.denis@gmail.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory"><![CDATA[{
@@ -83,6 +86,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/document" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.dslengine.commandprocessor" />
@@ -140,46 +146,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1750700151904</updated>
-    </task>
-    <task id="LOCAL-00003" summary="DSL - MAIN APP">
-      <option name="closed" value="true" />
-      <created>1753650478947</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1753650478948</updated>
-    </task>
-    <task id="LOCAL-00004" summary="DSL - Domains-Specific Languaje concept">
-      <option name="closed" value="true" />
-      <created>1753651986727</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1753651986727</updated>
-    </task>
-    <task id="LOCAL-00005" summary="DSL - controlador dsl sin uso">
-      <option name="closed" value="true" />
-      <created>1753652036289</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1753652036289</updated>
-    </task>
-    <task id="LOCAL-00006" summary="DSL - CLASS BUTTON">
-      <option name="closed" value="true" />
-      <created>1753652552736</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1753652552736</updated>
-    </task>
-    <task id="LOCAL-00007" summary="DSL - CLASS END MENU">
-      <option name="closed" value="true" />
-      <created>1753652690622</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1753652690622</updated>
     </task>
     <task id="LOCAL-00008" summary="DSL - CLASS START MENU">
       <option name="closed" value="true" />
@@ -533,7 +499,47 @@
       <option name="project" value="LOCAL" />
       <updated>1753665770016</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="DSL - FILES">
+      <option name="closed" value="true" />
+      <created>1774665910765</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1774665910765</updated>
+    </task>
+    <task id="LOCAL-00053" summary="DSL - FILES MOVED TO DOCUMENTS">
+      <option name="closed" value="true" />
+      <created>1774666207229</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1774666207229</updated>
+    </task>
+    <task id="LOCAL-00054" summary="DSL - ADDED GITHUB ACCOUNT ID">
+      <option name="closed" value="true" />
+      <created>1774666277143</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1774666277143</updated>
+    </task>
+    <task id="LOCAL-00055" summary="DSL - SCRIPTS FILE WAS ADDED TO DOCUMENTS">
+      <option name="closed" value="true" />
+      <created>1774667366737</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1774667366737</updated>
+    </task>
+    <task id="LOCAL-00056" summary="DSL - workspace commit">
+      <option name="closed" value="true" />
+      <created>1774668001418</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1774668001418</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="UpdateCopyrightCheckinHandler">
@@ -550,6 +556,12 @@
     </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="f6ea4de5-bbff-46f7-9856-72b185c88520" value="TOOL_WINDOW" />
+        <entry key="6b641d35-5347-4922-b483-6325948c1f7a" value="EDITOR" />
+      </map>
+    </option>
     <option name="RECENT_FILTERS">
       <map>
         <entry key="User">
@@ -567,6 +579,11 @@
     </option>
     <option name="TAB_STATES">
       <map>
+        <entry key="6b641d35-5347-4922-b483-6325948c1f7a">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -589,14 +606,15 @@
             </State>
           </value>
         </entry>
+        <entry key="f6ea4de5-bbff-46f7-9856-72b185c88520">
+          <value>
+            <State />
+          </value>
+        </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DSL - CLASS START PANE" />
-    <MESSAGE value="DSL - CLASS START STACKPANE" />
-    <MESSAGE value="DSL - MODULE INFO" />
-    <MESSAGE value="DSL - CLASS START MENU ITEM" />
     <MESSAGE value="DSL - CLASS LABEL COMMAND PROCESSOR" />
     <MESSAGE value="DSL - INTERFACE COMMAND PROCESSOR" />
     <MESSAGE value="DSL - DOCUMENT INTERFACE COMMAND PROCESSOR" />
@@ -618,6 +636,10 @@
     <MESSAGE value="DSL - FXML INTERFACES" />
     <MESSAGE value="DSL - DOCUMENT CLASS UI BUILDER CONTROLLER" />
     <MESSAGE value="DSL - FILES" />
-    <option name="LAST_COMMIT_MESSAGE" value="DSL - FILES" />
+    <MESSAGE value="DSL - FILES MOVED TO DOCUMENTS" />
+    <MESSAGE value="DSL - ADDED GITHUB ACCOUNT ID" />
+    <MESSAGE value="DSL - SCRIPTS FILE WAS ADDED TO DOCUMENTS" />
+    <MESSAGE value="DSL - workspace commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="DSL - workspace commit" />
   </component>
 </project>
