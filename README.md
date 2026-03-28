@@ -104,6 +104,4 @@ Copyright (c) 2026 Denis Balbuena
 Todos los derechos reservados.
 Este software es propietario y confidencial. No está permitido copiar, modificar, distribuir o utilizar este código sin autorización expresa.
 
-7effcad (DSL - README)
-
 
